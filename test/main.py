@@ -1,3 +1,4 @@
+Element("output").write("PyScript Loaded Successfully!")
 from pyscript import Element
 
         # Function to print "Hello, World!" (it must accept the event argument)
