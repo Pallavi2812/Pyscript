@@ -1,2 +1,3 @@
-def get_output():
-    return "Hello, this is the output from main.py!"
+def hello_world():
+    return "Hello, World!"
+
