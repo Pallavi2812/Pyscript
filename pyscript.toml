@@ -1,0 +1,3 @@
+[[fetch]]
+from = "./pyscripts/"
+files = ["main.py"]

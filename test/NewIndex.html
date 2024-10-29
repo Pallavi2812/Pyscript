@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mini Project</title>
+<script>
+        function callPythonFunction() {
+            fetch('/call_function')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('output').innerText = data.result;
+                })
+                .catch(error => console.error('Error:', error));
+        }
+</script>
+</head>
+<body>
+<h1>Call Python Function from Button</h1>
+<button onclick="callPythonFunction()">Click Me!</button>
+<div id="output" style="margin-top: 20px; font-weight: bold;"></div>
+</body>
+</html>
