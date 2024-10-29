@@ -1,34 +1,59 @@
-from http.server import BaseHTTPRequestHandler, HTTPServer
-import json
-import os
- 
-def my_function():
-    return "Hello from Python!"
- 
-class RequestHandler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        if self.path == '/':
-            self.send_response(200)
-            self.send_header('Content-type', 'text/html')
-            self.end_headers()
-            with open('index.html', 'rb') as file:
-                self.wfile.write(file.read())
-        elif self.path == '/call_function':
-            result = my_function()
-            self.send_response(200)
-            self.send_header('Content-type', 'application/json')
-            self.end_headers()
-            response = json.dumps({"result": result})
-            self.wfile.write(response.encode())
-        else:
-            self.send_response(404)
-            self.end_headers()
- 
-def run(server_class=HTTPServer, port=8000):
-    server_address = ('', port)
-    httpd = server_class(server_address, RequestHandler)
-    print(f'Serving on port {port}...')
-    httpd.serve_forever()
- 
-if __name__ == '__main__':
-    run()
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyScript Hello World</title>
+    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+</head>
+<body>
+
+    <h1>Welcome to PyScript</h1>
+
+    <button id="helloBtn">Click Me</button>
+    <button id="genaiBtn">GenAI Button</button>
+
+    <p id="output"></p>
+    <py-config>
+        packages = ["pandas"]
+        [[fetch]]
+        from = "./pyscripts/"
+        files = ["main.py","KibaliValues.csv","KibaliKeyIssues.csv"]
+    </py-config>
+    
+    <script type="py"  >
+        from pyscript import Element
+        from main import print_hello
+        Element("helloBtn").element.onclick = print_hello
+
+        import asyncio
+        import js
+        from pyodide.http import pyfetch
+
+        async def fetch_openai_data():
+            api_key = "5e91f5ecba35458d992b5c51b11643f8"
+            url = "https://allinone-oai-sql.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-02-15-preview"
+            headers = {
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {api_key}"
+            }
+            data = {
+                "prompt": "Say this is a test",
+                "max_tokens": 5
+            }
+
+            response = await pyfetch(url, method="POST", headers=headers, body=data)
+            result = await response.json()
+            js.document.getElementById("output").innerText = result["choices"][0]["text"]
+        
+        async def main():
+            button = js.document.getElementById("genaiBtn")
+            button.addEventListener("click", asyncio.ensure_future(fetch_openai_data()))
+
+        asyncio.ensure_future(main())
+        
+    </script>
+
+</body>
+</html>
