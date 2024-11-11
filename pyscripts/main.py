@@ -4,7 +4,7 @@ from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
-key_vault_name = "your-key-vault-name"
+key_vault_name = "test-kv-pyscript"
 key_vault_url = f"https://{key_vault_name}.vault.azure.net"
 credential = DefaultAzureCredential()
 client = SecretClient(vault_url=key_vault_url, credential=credential)
